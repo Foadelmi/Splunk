@@ -1,0 +1,8 @@
+host="Sophos_IP_Address" message="Lease IP*"
+| eval rd=trim(replace(raw_data,"^\\\"|\\\"$",""))
+| rex field=rd "(?<hostname>[^\t]+)$"
+| rex field=hostname "(?<hostname>[^ ]+)$"
+| stats latest(_time) as last_seen values(client_physical_address) as mac latest(hostname) as hostname by ipaddress
+| eval hostname=if(len(trim(hostname))=0,"(unknown)",hostname)
+| eval last_seen=strftime(last_seen,"%Y-%m-%d %H:%M:%S")
+| sort ip(ipaddress)
