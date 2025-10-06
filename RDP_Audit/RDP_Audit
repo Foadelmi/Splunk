@@ -1,0 +1,5 @@
+LogName=Security EventCode=4624 Source_Network_Address="192.168.*" Source_Network_Address!="PRTG or TDAD IP Address" Source_Port=0
+| eval minute=strftime(_time, "%Y-%m-%d %H:%M")
+| eval Account_Name=mvindex(Account_Name,1)
+| dedup minute, Source_Network_Address, host
+| table _time host Source_Network_Address Account_Name
